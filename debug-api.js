@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-require-imports */
 // Debug script to test the API endpoints
 require('dotenv').config({ path: '.env.local' });
 

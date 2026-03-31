@@ -2,9 +2,13 @@ import { NextRequest, NextResponse } from 'next/server';
 import OpenAI from 'openai';
 import { AmericanizedResume, Resume } from '@/entities/Resume';
 
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
-});
+function getOpenAIClient() {
+  const apiKey = process.env.OPENAI_API_KEY;
+  if (!apiKey || apiKey.trim().length === 0) {
+    throw new Error('Missing OPENAI_API_KEY');
+  }
+  return new OpenAI({ apiKey });
+}
 
 // Helper to clean AI response (remove markdown, etc.)
 function cleanAIResponse(text: string): string {
@@ -42,6 +46,7 @@ export async function POST(request: NextRequest) {
     console.log('🇺🇸 Transforming resume to American style using OpenAI GPT...');
     // Note: Not logging resume content for privacy
 
+    const openai = getOpenAIClient();
     const chatCompletion = await openai.chat.completions.create({
       model: 'gpt-4-turbo', // ✅ Updated to GPT-4 Turbo
       messages: [

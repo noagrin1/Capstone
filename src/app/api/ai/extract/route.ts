@@ -2,9 +2,13 @@ import { NextRequest, NextResponse } from 'next/server';
 import OpenAI from 'openai';
 import { Resume } from '@/entities/Resume';
 
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
-});
+function getOpenAIClient() {
+  const apiKey = process.env.OPENAI_API_KEY;
+  if (!apiKey || apiKey.trim().length === 0) {
+    throw new Error('Missing OPENAI_API_KEY');
+  }
+  return new OpenAI({ apiKey });
+}
 
 // Helper to clean AI response (remove markdown, etc.)
 function cleanAIResponse(text: string): string {
@@ -47,6 +51,7 @@ export async function POST(request: NextRequest) {
     console.log('📏 Full text length:', resumeText.length);
     // Note: Not logging resume content for privacy
 
+    const openai = getOpenAIClient();
     const chatCompletion = await openai.chat.completions.create({
       model: 'gpt-4o-mini', // ✅ Changed from gpt-4-turbo to gpt-4o-mini
       messages: [
