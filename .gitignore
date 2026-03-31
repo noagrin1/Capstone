@@ -42,4 +42,13 @@ next-env.d.ts
 
 # claude
 .claude
-CLAUDE.md
+CLAUDE.mdnode_modules/
+**/node_modules/
+node_modules/
+**/node_modules/
+.next/
+out/
+dist/
+build/
+.env
+.DS_Store
